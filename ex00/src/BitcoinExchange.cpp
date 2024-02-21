@@ -40,10 +40,9 @@ static bool isValidDate(const std::string& dateStr)
 	int year, month, day;
 	char delimiter;
 
-	for (size_t i = 0; i < dateStr.length(); i++)
+	for (char c : dateStr)
 	{
-		char c = dateStr[i];
-		if (!(isdigit(c) || c == '-'))
+		if (!isdigit(c) && c != '-')
 			return false;
 	}
 
