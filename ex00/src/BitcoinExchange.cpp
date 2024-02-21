@@ -190,10 +190,7 @@ void BitcoinExchange::searchValue(std::string input)
 		{
 			// Date does not exist, get the next lower date
 			if (it != _dataMap.begin())
-			{
 				--it;
-				inputDateInt = it->first;
-			}
 		}
 		std::cout << dateStr << " => " << value << " = " << (value * it->second) << std::endl;
 	}
