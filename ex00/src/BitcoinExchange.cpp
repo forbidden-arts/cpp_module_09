@@ -42,7 +42,7 @@ static bool isValidDate(const std::string& dateStr)
 
 	for (char c : dateStr)
 	{
-		if (!std::isdigit(c) && c != '-')
+		if (!isdigit(c) && c != '-')
 			return false;
 	}
 
