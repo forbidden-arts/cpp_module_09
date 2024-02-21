@@ -111,7 +111,6 @@ bool BitcoinExchange::validateDate(const std::string& inputDate)
 {
 	std::istringstream iss(inputDate);
 	std::string dateStr, pipe, valueStr;
-	int value;
 	int earliestDate = _dataMap.begin()->first;
 	int latestDate = _dataMap.rbegin()->first;
 
@@ -167,6 +166,11 @@ void BitcoinExchange::searchValue(std::string input)
 			continue;
 		}
 		iss >> dateStr >> pipe >> value;
+		if (!checkValue(value))
+		{
+			std::cerr << "Invalid value: " << value << std::endl;
+			continue;
+		}
 		int inputDateInt = dateToInt(dateStr);
 
 		// Check if the date exists in _dataMap
