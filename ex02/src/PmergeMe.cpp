@@ -54,41 +54,41 @@ Container PmergeMe<Container>::algorithm(Container source)
 	if (source.size() <= 1)
 		return source; // Base case for recursion
 
-	Container destination;
+	Container result;
 	typename Container::iterator it;
 
 	// Analyze pairs of elements and push the greater of the two into the container S
 	for (it = source.begin(); it != source.end() && it + 1 != source.end(); it += 2)
 	{
 		// Determine the greater element between *it and *(it + 1)
-		int greaterElement;
+		int bigNum;
 		if (*it > *(it + 1))
-			greaterElement = *it;
+			bigNum = *it;
 		else
-			greaterElement = *(it + 1);
-		destination.push_back(greaterElement);
+			bigNum = *(it + 1);
+		result.push_back(bigNum);
 	}
 
-	destination = algorithm(destination); // Recurse
+	result = algorithm(result); // Recurse
 
 	// Inserting elements based on binary search
 	for (it = source.begin(); it != source.end() && it + 1 != source.end(); it += 2)
 	{
 		// Determine the smaller element between *it and *(it + 1)
-		int smallerElement;
+		int smallNum;
 		if (*it < *(it + 1))
-			smallerElement = *it;
+			smallNum = *it;
 		else
-			smallerElement = *(it + 1);
+			smallNum = *(it + 1);
 		// Perform binary search to find the position to insert the smaller element
-		destination.insert(binarySearch(destination, smallerElement), smallerElement);
+		result.insert(binarySearch(result, smallNum), smallNum);
 	}
 
 	// Handle last element
 	if (source.size() % 2 != 0)
-		destination.insert(binarySearch(destination, *(source.end() - 1)), *(source.end() - 1));
+		result.insert(binarySearch(result, *(source.end() - 1)), *(source.end() - 1));
 
-	return destination;
+	return result;
 }
 
 // Explicit template instantiations for vector and deque

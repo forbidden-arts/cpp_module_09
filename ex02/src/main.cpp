@@ -1,3 +1,4 @@
+#include <sstream>
 #include "../include/PmergeMe.hpp"
 
 template <typename T>
@@ -9,26 +10,22 @@ static void	print(const T &container, std::string message)
 	std::cout << std::endl;
 }
 
-static bool	checkNumbers(char **argv)
-{
+static bool checkNumbers(char** argv) {
 	for (int i = 1; argv[i]; i++)
 	{
-		for (int j = 0; argv[i][j]; j++)
-		{
-			if (!isdigit(argv[i][j]))
-				return (false);
-		}
-		if (std::atoi(argv[i]) < 0)
-			return (false);
+		std::istringstream iss(argv[i]);
+		int value;
+		if (!(iss >> value) || value < 0)
+			return false;
 	}
-	return (true);
+	return true;
 }
 
 int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		std::cerr << "Error: you must enter a series of numbers" << std::endl;
+		std::cerr << "Error: you must enter one or more numbers" << std::endl;
 		return 1;
 	}
 
@@ -42,9 +39,10 @@ int main(int argc, char **argv)
 		if (!checkNumbers(argv))
 			throw PmergeMe<std::vector<int>>::BadInputsException();
 		for (int i = 1; argv[i]; i++)
+		{
 			vector.push_back(std::atoi(argv[i]));
-		for (int i = 1; argv[i]; i++)
 			deque.push_back(std::atoi(argv[i]));
+		}
 		print(vector, "Before:\t");
 		mainStart = clock();
 		vector = PmergeMe<std::vector<int>>::algorithm(vector);
@@ -62,7 +60,7 @@ int main(int argc, char **argv)
 	}
 	catch(std::exception &exep)
 	{
-		std::cerr <<  exep.what() << std::endl;
+		std::cerr << exep.what() << std::endl;
 	}
 	return 0;
 }
