@@ -1,11 +1,12 @@
 #pragma once
 
-#include <map>
-#include <regex>
-#include <sstream>
-#include <fstream>
-#include <cstdlib>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <map>
+#include <stdexcept>
+#include <cstdlib>
 #include <ctime>
 
 #define DATAFILE "data.csv"

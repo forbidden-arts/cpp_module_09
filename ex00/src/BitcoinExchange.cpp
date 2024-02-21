@@ -20,6 +20,8 @@ BitcoinExchange::~BitcoinExchange()
 {
 }
 
+std::map<int, double> BitcoinExchange::_dataMap;
+
 static int dateToInt(const std::string& dateStr)
 {
 	std::istringstream iss(dateStr);
@@ -38,6 +40,12 @@ static bool isValidDate(const std::string& dateStr)
 	int year, month, day;
 	char delimiter;
 
+	for (char c : dateStr)
+	{
+		if (!std::isdigit(c) && c != '-')
+			return false;
+	}
+
 	if (!(iss >> year >> delimiter >> month >> delimiter >> day) || (delimiter != '-'))
 		return false;
 
@@ -55,11 +63,17 @@ static bool isValidDate(const std::string& dateStr)
 
 static bool checkValue(double value)
 {
-	if (value < 0.0 || value > 1000.0)
+	if (value < 0.0)
 	{
-		std::cerr << "Invalid value: " << value << std::endl;
+		std::cerr << "Error: not a positive number => " << value << std::endl;
 		return false;
 	}
+	else if (value > 1000.0)
+	{
+		std::cerr << "Error: too large number => " << value << std::endl;
+		return false;
+	}
+
 	return true;
 }
 
@@ -134,9 +148,8 @@ bool BitcoinExchange::validateDate(const std::string& inputDate)
 void BitcoinExchange::searchValue(std::string input)
 {
 	std::string line, dateStr, pipe;
-	int value;
 	std::ifstream inputFile;
-	std::istringstream iss(line);
+	double value;
 
 	readCSV(DATAFILE);
 	if (_dataMap.empty())
@@ -151,26 +164,24 @@ void BitcoinExchange::searchValue(std::string input)
 		return;
 	}
 	getline(inputFile, line);
-	if (line.empty() || line != "date | value")
+	if (line != "date | value")
 	{
 		std::cerr << "Error. First line must be header: \"date | value\"" << std::endl;
 		return;
 	}
 	while (getline(inputFile, line))
 	{
+		std::istringstream iss(line);
 		if (line.empty())
 			continue;
 		if (!validateDate(line))
 		{
-			std::cerr << "Invalid date: " << line << std::endl;
+			std::cerr << "Error: bad input => " << line << std::endl;
 			continue;
 		}
 		iss >> dateStr >> pipe >> value;
 		if (!checkValue(value))
-		{
-			std::cerr << "Invalid value: " << value << std::endl;
 			continue;
-		}
 		int inputDateInt = dateToInt(dateStr);
 
 		// Check if the date exists in _dataMap
